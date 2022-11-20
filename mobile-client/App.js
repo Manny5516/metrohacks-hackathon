@@ -96,6 +96,16 @@ const MedicineItem = props => {
   );
 };
 
+const MedicineList = props => {
+  return (
+    <ScrollView style={{ height: "100%" }}>
+      {props.medicines.map((m, i) => (
+        <MedicineItem key={i} medicine={m} />
+      ))}
+    </ScrollView>
+  );
+};
+
 const medicines = findMedicines();
 
 const SearchComponent = () => {
@@ -110,11 +120,12 @@ const SearchComponent = () => {
         onChangeText={onChangeSearch}
         value={searchQuery}
       />
-      <ScrollView>
+      <MedicineList medicines={medicines}/>
+      {/* <ScrollView>
         {medicines.map((m, i) => (
           <MedicineItem key={i} medicine={m} />
         ))}
-      </ScrollView>
+      </ScrollView> */}
     </SafeAreaView>
   );
 };
@@ -129,9 +140,9 @@ function HomeScreen() {
 
 function SettingsScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Saved section is not implemented yet :(</Text>
-    </View>
+    <SafeAreaView>
+      <MedicineList medicines={medicines}/>
+    </SafeAreaView>
   );
 }
 

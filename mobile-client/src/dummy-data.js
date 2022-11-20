@@ -8,7 +8,7 @@ Escitalopram 10 mg: White to off – white colored, oval shaped, film-coated, bi
 The tablets can be divided into equal doses.`;
 
 
-const medicines = [
+let medicines = [
     {
         name: "Escitalopram Cinfa 10mg",
         productName: "Escitalopram 10 mg film-coated tablets",
@@ -38,5 +38,7 @@ const medicines = [
         bigImage: bigImage,
     },
 ];
+
+// medicines = medicines.concat(medicines).concat(medicines)
 
 export { medicines };
