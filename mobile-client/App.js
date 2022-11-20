@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   medicineItemRightPart: {
     margin: 10,
   },
-  availabiltyText: {
+  availableText: {
     backgroundColor: 'green',
     color: "white",
     alignSelf: 'flex-start',
@@ -48,10 +48,27 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
     paddingRight: 4,
     fontSize: 13,
-  }
+  },
+  unavailableText: {
+    backgroundColor: 'red',
+    color: "white",
+    alignSelf: 'flex-start',
+    borderRadius: 6,
+    paddingTop: 2,
+    paddingBottom: 2,
+    paddingLeft: 4,
+    paddingRight: 4,
+    fontSize: 13,
+  },
 });
 
-const MedicineItem = () => {
+const MedicineItem = (props) => {
+  let availability;
+  if (props.medicine.available) {
+    availability = <Text style={styles.availableText}>AVAILABLE</Text>;
+  } else {
+    availability = <Text style={styles.unavailableText}>UNAVAILABLE</Text>;
+  }
   return (
     <View style={styles.medicineItem}>
       <View style={styles.containerView}>
@@ -60,14 +77,19 @@ const MedicineItem = () => {
           source={require("./assets/favicon.png")}
         />
         <View style={styles.medicineItemRightPart}>
-          <Text style={{ fontSize: 17 }}>Escitalopram Cinfa 10mg</Text>
+          <Text style={{ fontSize: 17 }}>{props.medicine.name}</Text>
           <View style={{ marginTop: 3 }}>
-            <Text style={styles.availabiltyText}>AVAILABLE</Text>
+            { availability }
           </View>
         </View>
       </View>
     </View>
   );
+}
+
+const medicine = {
+  name: "Test medicine",
+  available: false,
 }
 
 const SearchComponent = () => {
@@ -83,7 +105,7 @@ const SearchComponent = () => {
         value={searchQuery}
       />
       <ScrollView>
-        { _.range(10).map(i => <MedicineItem key={i}/>) }
+        { _.range(10).map(i => <MedicineItem key={i} medicine={medicine}/>) }
       </ScrollView>
     </SafeAreaView>
   );
