@@ -21,27 +21,44 @@ import _ from "lodash";
 import { findMedicines } from "./src/api";
 
 const modalTest = props => {
+  let availability;
+  if (props.medicine.available) {
+    availability = <Text style={styles.availableText}>AVAILABLE</Text>;
+  } else {
+    availability = <Text style={styles.unavailableText}>UNAVAILABLE</Text>;
+  }
   return (
     <Modal
       animationType='slide'
       presentationStyle='formSheet'
       onRequestClose={() => {
-        console.log("slide " + props.medicine.name);
         props.onClose();
       }}
     >
-      <View style={styles.centeredView}>
-        <Pressable
-          style={[styles.button, styles.buttonClose]}
-          onPress={() => {
-            console.log("onClose " + props.medicine.name);
-            props.onClose();
-          }}
-        >
-          <View style={styles.modalView}>
-            <Text style={styles.textStyle}>{props.medicine.name}</Text>
-          </View>
-        </Pressable>
+      <View style={{ paddingTop: 25, paddingLeft: 20 }}>
+        <Text style={{ fontSize: 20 }}>{props.medicine.name}</Text>
+        {availability}
+        <Image
+          style={{ width: null, height: 220, resizeMode: "contain" }}
+          source={{ uri: props.medicine.bigImage }}
+        />
+        <Text style={{ fontSize: 20, margin: 9 }}>Description</Text>
+        <Text style={{ fontSize: 14, margin: 10, fontWeight: "bold" }}>
+          Name of the medicinal product
+        </Text>
+        <Text style={{ fontSize: 14, margin: 10 }}>
+          {props.medicine.productName}
+        </Text>
+        <Text style={{ fontSize: 14, margin: 10, fontWeight: "bold" }}>
+          Qualitative and quantitative composition
+        </Text>
+        <Text style={{ fontSize: 14, margin: 10 }}>
+          {props.medicine.composition}
+        </Text>
+        <Text style={{ fontSize: 14, margin: 10, fontWeight: "bold" }}>
+          Pharmaceutical form
+        </Text>
+        <Text style={{ fontSize: 14, margin: 10 }}>{props.medicine.form}</Text>
       </View>
     </Modal>
   );
@@ -223,6 +240,7 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
     paddingRight: 4,
     fontSize: 13,
+    overflow: "hidden",
   },
   unavailableText: {
     backgroundColor: "red",
@@ -234,5 +252,6 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
     paddingRight: 4,
     fontSize: 13,
+    overflow: "hidden",
   },
 });
