@@ -1,9 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import React, { useState } from "react";
+import { StyleSheet, Text, View, Image, SafeAreaView, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Feather';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Searchbar } from 'react-native-paper';
 
 // export default function App() {
 //   return (
@@ -23,11 +25,36 @@ import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 //   },
 // });
 
+const styles = StyleSheet.create({
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+});
+
+const SearchComponent = () => {
+  const [searchQuery, setSearchQuery] = React.useState('');
+
+  const onChangeSearch = query => setSearchQuery(query);
+
+  return (
+    <SafeAreaView>
+      <Searchbar
+        placeholder="Type medicine name here"
+        onChangeText={onChangeSearch}
+        value={searchQuery}
+      />
+    </SafeAreaView>
+  );
+};
+
 
 function HomeScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home!</Text>
+    <View>
+      <SearchComponent/>
     </View>
   );
 }
