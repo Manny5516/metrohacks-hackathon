@@ -1,72 +1,120 @@
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, SafeAreaView, TextInput, ScrollView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/Feather';
-import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Searchbar } from 'react-native-paper';
-import _ from 'lodash';
-import { findMedicines } from './src/api';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  SafeAreaView,
+  TextInput,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Modal,
+  Pressable,
+} from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Icon from "react-native-vector-icons/Feather";
+import IconM from "react-native-vector-icons/MaterialCommunityIcons";
+import { Searchbar } from "react-native-paper";
+import _ from "lodash";
+import { findMedicines } from "./src/api";
 
-const MedicineItem = (props) => {
+const modalTest = props => {
+  return (
+    <Modal
+      animationType='slide'
+      presentationStyle='formSheet'
+      onRequestClose={() => {
+        console.log("slide " + props.medicine.name);
+        props.onClose();
+      }}
+    >
+      <View style={styles.centeredView}>
+        <Pressable
+          style={[styles.button, styles.buttonClose]}
+          onPress={() => {
+            console.log("onClose " + props.medicine.name);
+            props.onClose();
+          }}
+        >
+          <View style={styles.modalView}>
+            <Text style={styles.textStyle}>{props.medicine.name}</Text>
+          </View>
+        </Pressable>
+      </View>
+    </Modal>
+  );
+};
+
+const MedicineItem = props => {
+  const [isShowDescription, setIsShowDescription] = useState(false);
   let availability;
   if (props.medicine.available) {
     availability = <Text style={styles.availableText}>AVAILABLE</Text>;
   } else {
     availability = <Text style={styles.unavailableText}>UNAVAILABLE</Text>;
   }
+  let modal;
+  if (isShowDescription) {
+    modal = modalTest({
+      medicine: props.medicine,
+      onClose: () => setIsShowDescription(false),
+    });
+  }
   return (
-    <View style={styles.medicineItem}>
-      <View style={styles.containerView}>
-        <Image
-          style={{ height: 50, width: 50 }}
-          source={{ uri: props.medicine.image }}
-        />
-        <View style={styles.medicineItemRightPart}>
-          <Text style={{ fontSize: 17 }}>{props.medicine.name}</Text>
-          <View style={{ marginTop: 3 }}>
-            { availability }
+    <TouchableWithoutFeedback onPress={() => setIsShowDescription(true)}>
+      <View style={styles.medicineItem}>
+        <View style={styles.containerView}>
+          <Image
+            style={{ height: 50, width: 50 }}
+            source={{ uri: props.medicine.image }}
+          />
+          <View style={styles.medicineItemRightPart}>
+            <Text style={{ fontSize: 17 }}>{props.medicine.name}</Text>
+            <View style={{ marginTop: 3 }}>{availability}</View>
           </View>
+          {modal}
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
-}
+};
 
 const medicines = findMedicines();
 
 const SearchComponent = () => {
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchQuery, setSearchQuery] = React.useState("");
 
   const onChangeSearch = query => setSearchQuery(query);
 
   return (
     <SafeAreaView>
       <Searchbar
-        placeholder="Type medicine name here"
+        placeholder='Type medicine name here'
         onChangeText={onChangeSearch}
         value={searchQuery}
       />
       <ScrollView>
-        { medicines.map((m, i) => <MedicineItem key={i} medicine={m}/>) }
+        {medicines.map((m, i) => (
+          <MedicineItem key={i} medicine={m} />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-
 function HomeScreen() {
   return (
     <View>
-      <SearchComponent/>
+      <SearchComponent />
     </View>
   );
 }
 
 function SettingsScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Saved section is not implemented yet :(</Text>
     </View>
   );
@@ -74,7 +122,7 @@ function SettingsScreen() {
 
 function ProfileScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Profile is not implemented yet :(</Text>
     </View>
   );
@@ -86,32 +134,56 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="Search" component={HomeScreen}
+        <Tab.Screen
+          name='Search'
+          component={HomeScreen}
+          options={{
+            tabBarIcon: ({ tintColor }) => <Icon name='search' size={30} />,
+          }}
+        />
+        <Tab.Screen
+          name='Saved'
+          component={SettingsScreen}
           options={{
             tabBarIcon: ({ tintColor }) => (
-              <Icon name="search" size={30} />
+              <IconM name='folder-star-outline' size={30} />
             ),
           }}
         />
-        <Tab.Screen name="Saved" component={SettingsScreen}
+        <Tab.Screen
+          name='Profile'
+          component={ProfileScreen}
           options={{
-            tabBarIcon: ({ tintColor }) => (
-              <IconM name="folder-star-outline" size={30} />
-            ),
+            tabBarIcon: ({ tintColor }) => <Icon name='user' size={30} />,
           }}
         />
-        <Tab.Screen name="Profile" component={ProfileScreen}
-          options={{
-            tabBarIcon: ({ tintColor }) => (
-              <Icon name="user" size={30} />
-            ),
-          }}/>
       </Tab.Navigator>
     </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
   input: {
     height: 40,
     margin: 12,
@@ -133,7 +205,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
   },
   containerView: {
-    alignItems: 'center',
+    alignItems: "center",
     flexDirection: "row",
     margin: 10,
     flexWrap: "wrap",
@@ -142,9 +214,9 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   availableText: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
     color: "white",
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     borderRadius: 6,
     paddingTop: 2,
     paddingBottom: 2,
@@ -153,9 +225,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   unavailableText: {
-    backgroundColor: 'red',
+    backgroundColor: "red",
     color: "white",
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     borderRadius: 6,
     paddingTop: 2,
     paddingBottom: 2,
