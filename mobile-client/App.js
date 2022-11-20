@@ -43,22 +43,20 @@ const modalTest = props => {
           source={{ uri: props.medicine.bigImage }}
         />
         <Text style={{ fontSize: 20, margin: 9 }}>Description</Text>
-        <Text style={{ fontSize: 14, margin: 10, fontWeight: "bold" }}>
+        <Text style={styles.descriptionSmallTitle}>
           Name of the medicinal product
         </Text>
-        <Text style={{ fontSize: 14, margin: 10 }}>
+        <Text style={styles.descriptionField}>
           {props.medicine.productName}
         </Text>
-        <Text style={{ fontSize: 14, margin: 10, fontWeight: "bold" }}>
+        <Text style={styles.descriptionSmallTitle}>
           Qualitative and quantitative composition
         </Text>
-        <Text style={{ fontSize: 14, margin: 10 }}>
+        <Text style={styles.descriptionField}>
           {props.medicine.composition}
         </Text>
-        <Text style={{ fontSize: 14, margin: 10, fontWeight: "bold" }}>
-          Pharmaceutical form
-        </Text>
-        <Text style={{ fontSize: 14, margin: 10 }}>{props.medicine.form}</Text>
+        <Text style={styles.descriptionSmallTitle}>Pharmaceutical form</Text>
+        <Text style={styles.descriptionField}>{props.medicine.form}</Text>
       </View>
     </Modal>
   );
@@ -253,5 +251,16 @@ const styles = StyleSheet.create({
     paddingRight: 4,
     fontSize: 13,
     overflow: "hidden",
+  },
+  descriptionSmallTitle: {
+    fontSize: 14,
+    margin: 10,
+    marginBottom: 0,
+    fontWeight: "bold",
+  },
+  descriptionField: {
+    fontSize: 14,
+    margin: 10,
+    marginTop: 4,
   },
 });
