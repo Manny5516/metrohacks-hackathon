@@ -1,0 +1,6 @@
+{
+  "semi": true,
+  "spaceBeforeFunctionParen": false,
+  "trailingComma": "es5",
+  "singleQuote": false
+}
