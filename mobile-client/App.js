@@ -16,11 +16,22 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Feather";
 import IconM from "react-native-vector-icons/MaterialCommunityIcons";
+import IconO from "react-native-vector-icons/Octicons";
 import { Searchbar } from "react-native-paper";
 import _ from "lodash";
 import { findMedicines } from "./src/api";
 
-const modalTest = props => {
+const FavoriteButton = props => {
+  let favoriteButton;
+  if (props.isFavorite) {
+    return <IconO name='star-fill' size={30} />;
+  } else {
+    return <IconO name='star' size={30} />;
+  }
+};
+
+const MedicineDescription = props => {
+  // const [isFavorite1, setIsFavorite1] = useState(false);
   let availability;
   if (props.medicine.available) {
     availability = <Text style={styles.availableText}>AVAILABLE</Text>;
@@ -37,7 +48,20 @@ const modalTest = props => {
     >
       <View style={{ paddingTop: 25, paddingLeft: 20 }}>
         <Text style={{ fontSize: 20 }}>{props.medicine.name}</Text>
-        {availability}
+        <View
+          style={{
+            flexDirection: "row",
+            marginTop: 4,
+            paddingRight: 25,
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+          }}
+        >
+          {availability}
+          <TouchableWithoutFeedback onPress={() => {}}>
+            <FavoriteButton isFavorite={true}/>
+          </TouchableWithoutFeedback>
+        </View>
         <Image
           style={{ width: null, height: 220, resizeMode: "contain" }}
           source={{ uri: props.medicine.bigImage }}
@@ -72,7 +96,7 @@ const MedicineItem = props => {
   }
   let modal;
   if (isShowDescription) {
-    modal = modalTest({
+    modal = MedicineDescription({
       medicine: props.medicine,
       onClose: () => setIsShowDescription(false),
     });
@@ -120,12 +144,7 @@ const SearchComponent = () => {
         onChangeText={onChangeSearch}
         value={searchQuery}
       />
-      <MedicineList medicines={medicines}/>
-      {/* <ScrollView>
-        {medicines.map((m, i) => (
-          <MedicineItem key={i} medicine={m} />
-        ))}
-      </ScrollView> */}
+      <MedicineList medicines={medicines} />
     </SafeAreaView>
   );
 };
@@ -141,7 +160,7 @@ function HomeScreen() {
 function SettingsScreen() {
   return (
     <SafeAreaView>
-      <MedicineList medicines={medicines}/>
+      <MedicineList medicines={medicines} />
     </SafeAreaView>
   );
 }
