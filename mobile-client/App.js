@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -22,16 +22,16 @@ import _ from "lodash";
 import { findMedicines } from "./src/api";
 
 const FavoriteButton = props => {
-  let favoriteButton;
-  if (props.isFavorite) {
-    return <IconO name='star-fill' size={30} />;
-  } else {
-    return <IconO name='star' size={30} />;
-  }
+  const [isFavorite, setIsFavorite] = useState(props.isFavorite);
+  return (
+    <TouchableWithoutFeedback onPress={() => { setIsFavorite(!isFavorite) }}>
+      <IconO suppressHighlighting={true}  name={ isFavorite ? 'star-fill' : 'star'} size={30} />
+    </TouchableWithoutFeedback>
+  );
 };
 
 const MedicineDescription = props => {
-  // const [isFavorite1, setIsFavorite1] = useState(false);
+  // const [test, setTest] = useState(0);
   let availability;
   if (props.medicine.available) {
     availability = <Text style={styles.availableText}>AVAILABLE</Text>;
@@ -58,9 +58,7 @@ const MedicineDescription = props => {
           }}
         >
           {availability}
-          <TouchableWithoutFeedback onPress={() => {}}>
-            <FavoriteButton isFavorite={true}/>
-          </TouchableWithoutFeedback>
+          <FavoriteButton isFavorite={props.medicine.isFavorite}/>
         </View>
         <Image
           style={{ width: null, height: 220, resizeMode: "contain" }}
